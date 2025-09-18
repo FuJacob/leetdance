@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// User Profile model
+model Profile {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  auth0Id   String   @unique
+  email     String   @unique
+  name      String
+  picture   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Dance attempts relationship
+  attempts DanceAttempt[]
+
+  @@map("profiles")
+}
+
+// Dance model
+model Dance {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  difficulty  String   // "Easy", "Medium", "Hard"
+  tags        String[]
+  videoUrl    String
+  gifUrl      String?
+  description String?
+  acceptance  String   // Pass rate percentage like "85%"
+  genre       String
+  number      Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Dance attempts relationship
+  attempts DanceAttempt[]
+
+  @@map("dances")
+}
+
+// Dance attempt model (tracks user progress)
+model DanceAttempt {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  profileId String   @db.ObjectId
+  danceId   String   @db.ObjectId
+  status    String   // "attempted", "solved", "reviewing"
+  score     Int?     // 0-100 score
+  videoUrl  String?  // User's recorded video
+  feedback  String?  // AI generated feedback
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  dance   Dance   @relation(fields: [danceId], references: [id], onDelete: Cascade)
+
+  @@map("dance_attempts")
+}
