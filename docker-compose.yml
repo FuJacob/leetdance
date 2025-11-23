@@ -1,0 +1,37 @@
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: leetdance-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    networks:
+      - leetdance-network
+    restart: unless-stopped
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./main
+      dockerfile: Dockerfile
+    container_name: leetdance-frontend
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./main/.env.local
+    depends_on:
+      - backend
+    networks:
+      - leetdance-network
+    restart: unless-stopped
+
+networks:
+  leetdance-network:
+    driver: bridge

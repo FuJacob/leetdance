@@ -67,14 +67,18 @@ export default function VideoRectangles({ videos }: VideoRectanglesProps) {
                   onMouseEnter={(e) => {
                     e.currentTarget.style.filter = 'brightness(1.1) contrast(1.2) saturate(1.4)';
                     e.currentTarget.style.transform = 'scale(1.05) rotateY(2deg)';
-                    e.currentTarget.parentElement.style.transform = 'translateY(-8px)';
-                    e.currentTarget.parentElement.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
+                    if (e.currentTarget.parentElement) {
+                      e.currentTarget.parentElement.style.transform = 'translateY(-8px)';
+                      e.currentTarget.parentElement.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.25)';
+                    }
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.filter = 'brightness(0.9) contrast(1.1) saturate(1.2)';
                     e.currentTarget.style.transform = 'scale(1) rotateY(0deg)';
-                    e.currentTarget.parentElement.style.transform = 'translateY(0px)';
-                    e.currentTarget.parentElement.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.15)';
+                    if (e.currentTarget.parentElement) {
+                      e.currentTarget.parentElement.style.transform = 'translateY(0px)';
+                      e.currentTarget.parentElement.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.15)';
+                    }
                   }}
                 />
                 
